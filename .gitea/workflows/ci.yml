@@ -55,5 +55,8 @@ jobs:
 
       - name: 上传产物到远程服务器
         run: |
-          scp output.zip default@10.0.0.3:/srv/publish/ao3-mirror-ssr/${{ steps.extract_tag.outputs.tag }}.zip
+          TAG=${{ steps.extract_tag.outputs.tag }}
+          scp output.zip default@10.0.0.3:/srv/publish/ao3-mirror-ssr/${TAG}.zip
+          ssh default@10.0.0.3 sh -c 'cd /srv/publish/ao3-mirror-ssr/; rm -f latest.zip; ln -s ${TAG}.zip latest.zip'
+
 
