@@ -1,8 +1,13 @@
 import { decompress } from 'compress-json'
 import './main.css'
-import { createApp } from './main'
 
-const { app, pinia, router } = createApp()
+import { createApp } from './main'
+import { createSSRRouter } from './router.js'
+
+const { app, pinia } = createApp()
+const router = createSSRRouter()
+
+app.use(router)
 
 if (window.__PINIA_STATE__) {
   pinia.state.value = decompress(window.__PINIA_STATE__)

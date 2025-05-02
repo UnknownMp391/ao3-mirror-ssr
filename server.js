@@ -16,6 +16,11 @@ const templateHtml = isProduction
 const app = express()
 app.use(cookieParser());
 
+const MESSAGE = {
+	404: 'Not Found',
+	0: 'Unknown'
+}
+
 // Add Vite or respective production middlewares
 /** @type {import('vite').ViteDevServer | undefined} */
 let vite
@@ -42,19 +47,30 @@ app.use('*all', async (req, res) => {
     /** @type {string} */
     let template
     /** @type {import('./src/entry-server.js').render} */
-    let render
+    let render, getRoute
     if (!isProduction) {
       // Always read fresh template in development
       template = await fs.readFile('./index.html', 'utf-8')
       template = await vite.transformIndexHtml(url, template)
-      render = (await vite.ssrLoadModule('/src/entry-server.js')).render
+      const module = await vite.ssrLoadModule('/src/entry-server.js')
+      render = module.render
+      getRoute = module.getRoute
     } else {
       template = templateHtml
-      render = (await import('./dist/server/entry-server.js')).render
+      const module = await import('./dist/server/entry-server.js')
+      render = module.render
+      getRoute = module.getRoute
     }
-    const { stream, piniaState } = await render(url, req.cookies, req.headers.host)
+    const { router, code } = await getRoute(url)
+    if (code != 200 && !req.accepts('html')) {
+      res.status(code).set({ 'Content-Type': 'text/plain' })
+      res.write(MESSAGE[code] || MESSAGE[0])
+      res.end()
+      return
+    }
+    const { stream, piniaState } = await render(router, req.cookies, req.headers.host)
     const [htmlStart, htmlEnd] = template.split('<!--app-html-->')
-    res.status(200).set({ 'Content-Type': 'text/html' })
+    res.status(code).set({ 'Content-Type': 'text/html' })
     res.write(htmlStart)  
     for await (const chunk of stream) {
       if (res.closed) break

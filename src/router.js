@@ -41,7 +41,8 @@ export function createSSRRouter() {
 			component: () => import('./views/fallback/NotFound.vue'),
 			meta: {
 				title: "页面未找到",
-				hidden: true
+				hidden: true,
+				code: 404
 			}
 		}
 	]})
