@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Worker 管理</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    button {
+      padding: 5px 10px;
+      background-color: #ff5555;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #ff2222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Service Worker 管理器</h1>
+  <p>这个页面会返回当前网站的所有注册的 Service Worker 并且允许反注册它们</p>
+  <div id="sw-list">
+    <p>加载中...</p>
+  </div>
+  <script>
+    async function loadServiceWorkers() {
+      const swListContainer = document.getElementById('sw-list');
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        if (registrations.length === 0) {
+          swListContainer.innerHTML = '<p>没有找到Service Workers.</p>';
+          return;
+        }
+        let tableHtml = `
+          <table>
+            <thead>
+              <tr>
+                <th>作用域</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        registrations.forEach((registration, index) => {
+          tableHtml += `
+            <tr>
+              <td>${registration.scope}</td>
+              <td>
+                <button onclick="unregisterServiceWorker(${index})">反注册</button>
+              </td>
+            </tr>
+          `;
+        });
+        tableHtml += `
+            </tbody>
+          </table>
+        `;
+        swListContainer.innerHTML = tableHtml;
+      } else {
+        swListContainer.innerHTML = '<p>当前游览器不支持Service Workers.</p>';
+      }
+    }
+    async function unregisterServiceWorker(index) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      if (registrations[index]) {
+        const scope = registrations[index].scope;
+        const success = await registrations[index].unregister();
+        if (success) {
+          alert(`成功反注册作用域为 '${scope}' 的 Service Worker`);
+        } else {
+          alert(`反注册作用域为 '${scope}' 的 Service Worker 失败了`);
+        }
+        loadServiceWorkers();
+      } else {
+        alert('未知的索引');
+      }
+    }
+    window.onload = loadServiceWorkers;
+  </script>
+</body>
+</html>
