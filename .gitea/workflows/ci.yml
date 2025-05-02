@@ -1,49 +1,57 @@
 name: Node.js CI
 
 on:
-	push:
-		branches:
-			- main
-	pull_request:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-	build-and-test:
-		runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: ubuntu-latest
 
-		steps:
-			- name: 检出代码
-				uses: actions/checkout@v3
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
 
-			- name: 设置 Node.js
-				uses: actions/setup-node@v3
-				with:
-					node-version: '21'	# 可改为 16/20 等版本
-					cache: 'npm'
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'  # 可改为 16/20 等版本
 
-			- name: 安装依赖
-				run: npm install --force
+      - name: 缓存 npm 模块
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
-			- name: 构建项目（可选）
-				run: npm run build
-				if: success()
-			- name: 打包构建产物
-				run: |
-					mkdir -p build-out
-					cp -r dist build-out/
-					cp server.js index.html package.json build-out/
-					zip -r output.zip build-out
+      - name: 安装依赖
+        run: npm install --force
 
-			- name: 设置 SSH 私钥
-				run: |
-					mkdir -p ~/.ssh
-					echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-					chmod 600 ~/.ssh/id_ed25519
-					echo "Host *" > ~/.ssh/config
-					echo "  StrictHostKeyChecking no" >> ~/.ssh/config
-					echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-			
-			- name: 测试 SSH 连接
-				run: ssh -T git@10.0.0.3 -p 222
+      - name: 构建项目（可选）
+        run: npm run build
+        if: success()
 
+      - name: 打包构建产物
+        run: |
+          mkdir -p build-out
+          cp -r dist build-out/
+          cp -r public build-out/
+          cp server.js index.html package.json build-out/
+          zip -r output.zip build-out
 
+      - name: 设置 SSH 私钥
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "Host *" > ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+      
+      - name: 测试 SSH 连接
+        run: |
+          scp output.zip default@10.0.0.3:/tmp/1.zip
 
