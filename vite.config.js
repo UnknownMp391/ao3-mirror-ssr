@@ -21,19 +21,7 @@ export default defineConfig({
 		vueJsx(),
 		vueDevTools(),
 		markdown()
-		/*VitePWA({
-			name: '墨宇留香 - 渐进式  Web App 版本',
-			short_name: '墨宇留香',
-			start_url: '/index.html',
-			display: 'standalone',
-			"background_color": "#808080",
-			"theme_color": "#7F3C5C",
-			"icons": [
-				{
-					"src": "/favicon.png",
-					"sizes": "507x580",
-					"type": "image/png"
-		}]})*/
+		
 	],
 	resolve: {
 		alias: {
