@@ -1,0 +1,50 @@
+@import 'mdui/mdui.css';
+// @import './assets/typescale.css';
+
+// 字体配置
+$font-family: Roboto, Noto Sans SC, PingFang SC, Lantinghei SC,
+  Microsoft Yahei, Hiragino Sans GB, "Microsoft Sans Serif",
+  WenQuanYi Micro Hei, sans-serif;
+
+// MDUI 变量简写
+$bg-color: rgb(var(--mdui-color-background));
+$error-color: rgb(var(--mdui-color-error));
+$on-error-color: rgb(var(--mdui-color-on-error));
+$transition-duration: var(--mdui-motion-duration-short2);
+$transition-easing: var(--mdui-motion-easing-linear);
+
+body {
+  font-family: $font-family;
+  background-color: $bg-color;
+  transition: opacity $transition-duration $transition-easing;
+}
+
+// MDUI 组件样式
+mdui-card {
+  width: 100%;
+  padding: 0 16px 16px;
+}
+
+mdui-text-field {
+  margin: 8px 0;
+}
+
+// 警告样式
+.warn {
+  background-color: $error-color;
+  color: $on-error-color;
+}
+
+.warn-text {
+  color: $error-color;
+}
+
+// 通用工具类
+.pre-break {
+  white-space: pre-line;
+}
+
+.no-select {
+  user-select: none;
+}
+

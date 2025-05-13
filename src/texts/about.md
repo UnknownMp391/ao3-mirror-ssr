@@ -14,9 +14,9 @@
 
 组件库与工具链
 ---
-- MDUI 2
-- Vue
-- Vite
+- MDUI 2 [mdui.org](https://mdui.org)
+- Vue 3 [vuejs.org](https://vuejs.org)
+- Vite 6 [vitejs.dev](https://vitejs.dev)
 
 其他
 ---

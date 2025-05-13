@@ -1,5 +1,5 @@
 import { decompress } from 'compress-json'
-import './main.css'
+import './main.scss'
 
 import { createApp } from './main'
 import { createSSRRouter } from './router.js'
