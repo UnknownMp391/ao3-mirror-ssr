@@ -5,6 +5,7 @@ import App from './App.vue'
 
 import ClientOnly from './ssr/ClientOnly.vue'
 import Hr from './ui/BetterHr.vue'
+import Form from './ui/Form.vue'
 
 export function createApp() {
 	const app = createSSRApp(App)
@@ -13,5 +14,6 @@ export function createApp() {
 	app
 		.component('ClientOnly', ClientOnly)
 		.component('Hr', Hr)
+		.component('Form', Form)
 	return { app, pinia }
 }

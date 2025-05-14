@@ -9,8 +9,6 @@ import Intro from '../texts/intro.md'
 
 const router = useRouter()
 
-const src = ref('')
-const srcText = ref(null)
 const err = ref(false)
 
 function convert(from) {
@@ -35,11 +33,10 @@ function convert(from) {
 	}
 }
 
-function onConvert() {
-	const { id, cid } = convert(src.value)
+function onConvert(data) {
+	const { id, cid } = convert(data.src)
 	if (id == null) {
 		err.value = true
-		srcText.value?.focus()
 	} else {
 		err.value = false
 		if (cid) router.push(`/work/${id}/${cid}`)
@@ -56,17 +53,17 @@ function onConvert() {
 	<section id="converter">
 		<h2>链接转换</h2>
 		<p>输入完整链接或者 ID</p>
-		<ClientOnly>
-			<mdui-text-field variant="filled" label="链接" placeholder="https://archiveofourown.org/works/114514" @input="src = $event.target.value" ref='srcText'>
-			<span  v-if='err' slot="helper" class='warn-text'>链接格式错误!</span>
+		<Form @submit="onConvert"><ClientOnly>
+			<mdui-text-field variant="filled" label="链接" name="src" placeholder="https://archiveofourown.org/works/114514" >
+			<span v-if='err' slot="helper" class='warn-text'>链接格式错误!</span>
 			</mdui-text-field><br/>
 			<div style="display: flex">
 				<div style="flex-grow: 1"></div>
-				<mdui-button @click='onConvert'>-></mdui-button>
+				<mdui-button type="submit">-></mdui-button>
 			</div>
-			{{ src }}
 		<template #ssr>
-			Padding...
-		</template></ClientOnly>
+				<input type="text" id="src" name="src" />
+				<input type="submit" />
+		</template></ClientOnly></Form>
 	</section>
 </template>

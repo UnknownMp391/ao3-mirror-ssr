@@ -120,7 +120,7 @@ function openBookmarkMenu(bk, index) {
 async function deleteBookmark() {
 	if (bookmarkSelect.value) {
 		bookmarkStore.del(bookmarkSelect.value.bk.id)
-		bookmarks.value.splice(bookmarkSelect.value.index)
+		bookmarks.value.splice(bookmarkSelect.value.index,1)
 		bookmarkSelect.value = null
 	}
 }

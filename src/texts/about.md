@@ -16,7 +16,7 @@
 ---
 - MDUI 2 [mdui.org](https://mdui.org)
 - Vue 3 [vuejs.org](https://vuejs.org)
-- Vite 6 [vitejs.dev](https://vitejs.dev)
+- Vite 6 [vitejs.dev](https://vite.dev)
 
 其他
 ---
