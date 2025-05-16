@@ -19,8 +19,11 @@ export default defineConfig({
 		}),
 		vueJsx(),
 		vueDevTools(),
-		markdown()
-		
+		markdown({
+			markdownItSetup(md) {
+				md.renderer.rules.hr = () => "<Hr />"
+			}
+		})
 	],
 	resolve: {
 		alias: {
