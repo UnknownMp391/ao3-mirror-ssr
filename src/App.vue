@@ -98,7 +98,7 @@ onMounted(async () => {
 			<li v-for="item in routeStore.allRoutes"
 			:key="item.path"
 			:class="{ 'active-item' : item.path == $route.path }"
-			>{{ item.name }}</li>
+			><a :href="item.path">{{ item.name }}</a></li>
 		</ul>
     </template></ClientOnly>
     </nav>
