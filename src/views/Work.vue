@@ -22,6 +22,9 @@ import 'mdui/components/button.js'
 import 'mdui/components/dropdown.js'
 import 'mdui/components/menu.js'
 import 'mdui/components/menu-item.js'
+import 'mdui/components/collapse.js'
+import 'mdui/components/collapse-item.js'
+import 'mdui/components/card.js'
 
 import '@mdui/icons/bookmark.js'
 
@@ -46,6 +49,12 @@ let isObserver = null
 let bookmarkStore = null
 let paragraphs = []
 let currentParagraph = null
+
+const categoryName = {
+	mm: "男/男",
+	ff: "女/女",
+	fm: '女/男'
+}
 
 async function addBookmark() {
 	if (currentParagraph) {
@@ -187,10 +196,42 @@ onBeforeUnmount(() => {
 			<article>
 				<h1 style="margin: auto">{{ workReadState.title }}</h1>
 				<h4>{{ workReadState.pesud }}</h4>
+				<mdui-card style="margin: 8px; padding: 0px;"><mdui-collapse acc>
+					<mdui-collapse-item value="info"><mdui-list-item class="infoblockhead" slot="header">
+						作品信息
+					</mdui-list-item><div class="infoblock"><dl>
+						<dt>分类</dt><ul>
+							<li v-for="item in workReadState.category" :key="item">
+							{{ categoryName[item] }}</li>
+						</ul>
+						<dt>原著</dt><ul>
+							<li v-for="item in workReadState.fandom" :key="item">
+							{{ item }}</li>
+						</ul>
+						<dt>语言</dt><dd>
+							{{ workReadState.lang }}
+						</dd>
+					</dl></div></mdui-collapse-item>
+					<mdui-collapse-item value="stats"><mdui-list-item class="infoblockhead" slot="header">
+						作品状态
+					</mdui-list-item><div class="infoblock"><dl>
+						<dt>发布时间</dt><dd>
+							{{ workReadState.publishedTime.year }} -
+							{{ workReadState.publishedTime.month }} -
+							{{ workReadState.publishedTime.date }}
+						</dd>
+						<dt>字数</dt><dd>
+							{{ workReadState.wordCount }}
+						</dd>
+						<dt>点击</dt><dd>
+							{{ workReadState.hitCount }}
+						</dd>
+					</dl></div></mdui-collapse-item>
+				</mdui-collapse></mdui-card>
 				<blockquote>
 					<p v-for="para in workReadState.summary" :key="para" v-html='para'></p>
 				</blockquote>
-				<Hr/>
+				<Hr />
 				<div ref='content'>
 					<p v-for="(para, index) in workReadState.text" :key="para" :data-index="index">{{ para }}</p>
 				</div>
@@ -237,6 +278,31 @@ onBeforeUnmount(() => {
 		<template v-if="workReadState.state == 'ready'">
 			<h1>{{ workReadState.title }}</h1>
 			<h2>{{ workReadState.pesud }}</h2>
+			<dl>
+				<dt>分类</dt><ul>
+					<li v-for="item in workReadState.category" :key="item">
+					{{ categoryName[item] }}</li>
+				</ul>
+				<dt>原著</dt><ul>
+					<li v-for="item in workReadState.fandom" :key="item">
+					{{ item }}</li>
+				</ul>
+				<dt>语言</dt><dd>
+					{{ workReadState.lang }}
+				</dd>
+				<dt>发布时间</dt><dd>
+					{{ workReadState.publishedTime.year }} -
+					{{ workReadState.publishedTime.month }} -
+					{{ workReadState.publishedTime.date }}
+				</dd>
+				<dt>字数</dt><dd>
+					{{ workReadState.wordCount }}
+				</dd>
+				<dt>点击</dt><dd>
+					{{ workReadState.hitCount }}
+				</dd>
+			</dl>
+			<Hr />
 			<blockquote>
 				<p v-for="para in workReadState.summary" :key="para" v-html='para'></p>
 			</blockquote>
@@ -253,5 +319,13 @@ onBeforeUnmount(() => {
     right: 16px; /* 调整水平位置 */
     z-index: 1000; /* 确保悬浮按钮在其他内容上方 */
     animation: slideInFromRight var(--mdui-motion-duration-medium2) var(--mdui-motion-easing-standard); /* 动画时长和缓动效果 */
+}
+
+.infoblock {
+	margin: 8px 16px;
+}
+
+.infoblockhead {
+	background-color: rgb(var(--mdui-color-primary-container));
 }
 </style>

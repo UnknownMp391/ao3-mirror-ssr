@@ -12,14 +12,27 @@ export const useWorkReadState = defineStore('workRead', () => {
 	const pesud = ref(null)
 	const title = ref(null)
 	const text = ref(null)
-	const publishedTime = ref(null)
 	const state = ref('')
+	const publishedTime = ref(null)
+	const wordCount = ref(0)
+	const kudoCount = ref(0)
+	const hitCount = ref(0)
+	const category = ref([])
+	const fandom = ref([])
+	const lang = ref(null)
 	function setData(data) {
 		id.value = data.workId
 		title.value = data.title
 		summary.value = [escapeAndFormatText(data.summary)]
 		pesud.value = data.pesud
 		text.value = data.text.split('\n\n')
+		publishedTime.value = data.stats.publishedTime
+		wordCount.value = data.stats.wordCount
+		kudoCount.value = data.stats.kudoCount
+		hitCount.value = data.stats.hitCount
+		category.value = data.category
+		fandom.value = data.fandom
+		lang.value = data.lang
 	}
 	async function loadWork(target) {
 		if (target == id.value || state.value == 'loading') return
@@ -39,8 +52,14 @@ export const useWorkReadState = defineStore('workRead', () => {
 		summary,
 		pesud,
 		text,
-		publishedTime,
 		state,
+		publishedTime,
+		wordCount,
+		kudoCount,
+		hitCount,
+		category,
+		fandom,
+		lang,
 		setData,
 		loadWork
 	}
