@@ -38,10 +38,7 @@ export default defineConfig({
 						.toLowerCase()
 						.replace(/\s+/g, "-")
 				})
-				mdit.renderer.rules.hr = () => {
-					console.log('Custom <hr> rendered 🚀');
-					return '<div><BetterHr /></div>'
-				}
+				mdit.renderer.rules.hr = () => '<div><BetterHr /></div>'
 				const defaultOpen = mdit.renderer.rules.link_open || ((tokens, idx, options, env, self) => {
 					return self.renderToken(tokens, idx, options)
 				})
