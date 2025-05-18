@@ -102,8 +102,9 @@ export const useApiStore = defineStore('api', () => {
 		inited = false
 		await init()
 	}
-	async function getWork(workId) {
-		return await apiGet('work',{ workId })
+	async function getWork(workId, chapterId) {
+		if (chapterId) return await apiGet(`work/${workId}/${chapterId}`)
+		return await apiGet(`work/${workId}`)
 	}
 	return {
 		init,

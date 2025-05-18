@@ -8,6 +8,7 @@ import { useApiStore } from '@/stores/api.js'
 export const useWorkReadState = defineStore('workRead', () => {
 	const api = useApiStore()
 	const id = ref(null)
+	const cid = ref(null)
 	const summary = ref(null)
 	const pesud = ref(null)
 	const title = ref(null)
@@ -25,7 +26,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		title.value = data.title
 		summary.value = [escapeAndFormatText(data.summary)]
 		pesud.value = data.pesud
-		text.value = data.text.split('\n\n')
+		text.value = data.text
 		publishedTime.value = data.stats.publishedTime
 		wordCount.value = data.stats.wordCount
 		kudoCount.value = data.stats.kudoCount
@@ -34,10 +35,10 @@ export const useWorkReadState = defineStore('workRead', () => {
 		fandom.value = data.fandom
 		lang.value = data.lang
 	}
-	async function loadWork(target) {
-		if (target == id.value || state.value == 'loading') return
+	async function loadWork(target, targetc) {
+		if (target == id.value && targetc == cid.value || state.value == 'loading') return
 		state.value = 'loading'
-		const result = await api.getWork(target)
+		const result = await api.getWork(target, targetc)
 		if (result.status == 200) {
 			setData(result.data)
 			state.value = 'ready'
@@ -47,7 +48,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		}
 	}
 	return {
-		id,
+		id, cid,
 		title,
 		summary,
 		pesud,

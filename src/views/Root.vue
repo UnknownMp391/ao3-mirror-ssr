@@ -20,6 +20,7 @@ function convert(from) {
 		}
 	} else if (from.includes('https://archiveofourown.org/works/')) {
 		const sid = from.split('https://archiveofourown.org/works/')[1];
+		console.log(sid)
 		if ( sid ) {
 			const id = Number(sid)
 			if (id) {
@@ -27,17 +28,24 @@ function convert(from) {
 					type: 's',
 					id
 				}
+			} else {
+				const splited = sid.split('/chapters/')
+				const id = Number(splited[0])
+				const cid = Number(splited[1])
+				if (id && cid) {
+					return {
+						type: 'c',
+						id, cid
+					}
+				}
 			}
 		}
 	}
-	return {
-		type: null,
-	}
+	return { type: null }
 }
 
 function onConvert(data) {
 	const { type, id, cid } = convert(data.src)
-	console.log(type, id, cid)
 	if (type == null) {
 		err.value = true
 		srcText.value?.focus()

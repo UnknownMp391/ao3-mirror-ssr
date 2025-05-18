@@ -14,17 +14,24 @@
 
 现在这个站点还处于测试阶段, 只有一种使用方法 *(后面会扩展)*
 
-首先你需要一个 AO3 链接  
+首先你需要一个 AO3 链接 (或者数字 ID)  
 比如:
 
 	https://archiveofourown.org/works/114514
+
+带章节的话就是
+
+	https://archiveofourown.org/works/114514/chapters/1919810
+
 
 接着将前面的部分替换为本站点的链接 (保留数字ID部分):  
 即:
 
 	https://ao3.unknownmp.top/work/114514
 
-这里的数字ID即为`114514`
+章节:
+
+	https://ao3.unknownmp.top/work/114514/1919810
 
 浏览器打开它, OK 你会用了🤓👆!
 
@@ -33,7 +40,7 @@
 ## 功能与特性 🤗
 
 - ✅ 预览
-- ✅ 书签 (本地)
-- 📝 历史记录 (本地)
+- ✅ 作品详细数据
 - 📝 搜索
+- ❌ 不再支持! [详情](/about#deprecated-feature-bookmark) 书签 (本地)
 

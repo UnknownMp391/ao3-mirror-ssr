@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import markdown from 'vite-plugin-md'
+import markdownItAnchor from 'markdown-it-anchor'
+import markdownItAttrs from 'markdown-it-attrs'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -20,8 +22,57 @@ export default defineConfig({
 		vueJsx(),
 		vueDevTools(),
 		markdown({
-			markdownItSetup(md) {
-				md.renderer.rules.hr = () => "<Hr />"
+			markdownItSetup(mdit) {
+				mdit.use(markdownItAttrs)
+				mdit.use(markdownItAnchor, {
+					permalink: markdownItAnchor.permalink.ariaHidden({
+						placement: 'before',
+						symbol: '#',
+						level: [1, 2, 3, 4],
+					}),
+					slugify: s => s
+						.normalize("NFKD")
+						.replace(/[\u0300-\u036f]/g, "") // 去除重音符号
+						.replace(/[^\w\s-]/g, "") // 移除 emoji 和特殊符号
+						.trim()
+						.toLowerCase()
+						.replace(/\s+/g, "-")
+				})
+				mdit.renderer.rules.hr = () => {
+					console.log('Custom <hr> rendered 🚀');
+					return '<div><BetterHr /></div>'
+				}
+				const defaultOpen = mdit.renderer.rules.link_open || ((tokens, idx, options, env, self) => {
+					return self.renderToken(tokens, idx, options)
+				})
+				const defaultClose = mdit.renderer.rules.link_close || ((tokens, idx, options, env, self) => {
+					return self.renderToken(tokens, idx, options)
+				})
+				mdit.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+					const token = tokens[idx]
+					const href = token.attrGet('href') || ''
+					const isExternal = /^https?:\/\//.test(href)
+					const isInternal = /^\/(?!\/)/.test(href)
+					if (isInternal) {
+						// 转换为 <router-link> 并设置 `to`
+						token.tag = 'router-link'
+						token.attrSet('to', href)
+						token.attrs = token.attrs?.filter(attr => attr[0] !== 'href') || []
+					} else if (isExternal) {
+						// 站外链接加上 target="_blank" rel="noopener noreferrer"
+						token.attrSet('target', '_blank')
+						token.attrSet('rel', 'noopener noreferrer')
+					}
+
+					return defaultOpen(tokens, idx, options, env, self)
+				}
+				mdit.renderer.rules.link_close = (tokens, idx, options, env, self) => {
+					const previous = tokens[idx - 1]
+					if (previous?.tag === 'router-link') {
+						tokens[idx].tag = 'router-link'
+					}
+					return defaultClose(tokens, idx, options, env, self)
+				}
 			}
 		})
 	],

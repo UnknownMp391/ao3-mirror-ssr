@@ -14,6 +14,7 @@ export function createApp() {
 	app
 		.component('ClientOnly', ClientOnly)
 		.component('Hr', Hr)
+		.component('BetterHr', Hr)
 		.component('Form', Form)
 	return { app, pinia }
 }

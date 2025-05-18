@@ -5,7 +5,6 @@ defineProps(['class'])  // 接收外部 class 属性
 
 <template>
   <ClientOnly>
-    <!-- 将 class 传入 mdui-divider 中 -->
     <mdui-divider :class="['hr-divider', $attrs.class]"></mdui-divider>
     <template #ssr><hr :class="['hr-divider', $attrs.class]" /></template>
   </ClientOnly>
