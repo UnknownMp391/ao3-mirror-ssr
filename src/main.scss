@@ -13,12 +13,20 @@ $on-error-color: rgb(var(--mdui-color-on-error));
 $transition-duration: var(--mdui-motion-duration-short2);
 $transition-easing: var(--mdui-motion-easing-linear);
 
+html {
+  scroll-padding-top: 64px; /* 等于顶栏高度 */
+}
+
 body {
   font-family: $font-family;
   background-color: $bg-color;
   transition: opacity $transition-duration $transition-easing;
 }
 
+pre {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
 // MDUI 组件样式
 mdui-card {
   width: 98%;
