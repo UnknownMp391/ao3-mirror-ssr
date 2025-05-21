@@ -1,4 +1,4 @@
-import { renderToWebStream, renderToString } from 'vue/server-renderer'
+import { renderToWebStream } from 'vue/server-renderer'
 import { createApp } from './main'
 
 import { createSSRRouter } from './router.js'
