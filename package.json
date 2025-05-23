@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@mdui/icons": "^1.0.2",
+    "@vueuse/core": "^13.2.0",
+    "@vueuse/integrations": "^13.2.0",
     "axios": "^1.9.0",
     "compress-json": "^3.1.1",
     "cookie-parser": "^1.4.7",

@@ -40,12 +40,20 @@ export function createSSRRouter() {
 				hidden: true
 			}
 		},{
+			path: '/settings',
+			name: '设置',
+			component: () => import('./views/Settings.vue'),
+			meta: {
+				title: '设置',
+				order: 2
+			},
+		},{
 			path: '/about',
 			name: '关于',
 			component: () => import('./views/About.vue'),
 			meta: {
 				title: '',
-				order: 2
+				order: 3
 			},
 		},{
 			path: '/developer',

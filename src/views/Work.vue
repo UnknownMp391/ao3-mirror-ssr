@@ -148,9 +148,9 @@ onBeforeUnmount(() => {
 					<p v-for="para in workReadState.summary" :key="para" v-html='para'></p>
 				</blockquote>
 				<Hr />
-				<div ref='content'>
+				<article ref='content'>
 					<p v-for="(para, index) in workReadState.text" :key="para" :data-index="index">{{ para }}</p>
-				</div>
+				</article>
 			</article>
 			<mdui-fab class="mdui-fab" :extended="fabExtended">
 				<mdui-icon-bookmark slot="icon"></mdui-icon-bookmark>
@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
 				<p v-for="para in workReadState.summary" :key="para" v-html='para'></p>
 			</blockquote>
 			<Hr/>
-			<p v-for="para in workReadState.text.slice(0, 10)" :key="para">{{ para }}</p>
+			<article><p v-for="para in workReadState.text.slice(0, 10)" :key="para">{{ para }}</p></article>
 		</template>
 	</template></ClientOnly>
 </template>

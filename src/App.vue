@@ -27,7 +27,7 @@ const route = useRoute()
 
 const clientOnlyStore = useClientOnlyStore()
 const api = useApiStore()
-const themeScheme = useThemeStore()
+let themeScheme = null
 const mobileScreen = useMobileScreen()
 const routeStore = useRouteStore()
 
@@ -38,7 +38,7 @@ const closeDrawer = ref(true)
 let progressTimer = null
 
 onServerPrefetch(async () => {
-	await api.init()
+
 })
 
 onBeforeMount(() => {
@@ -47,8 +47,8 @@ onBeforeMount(() => {
 })
 
 onMounted(async () => {
+	themeScheme = useThemeStore()
 	themeScheme.applyTheme()
-	await api.init()
 	clientOnlyStore.setClient()
 	new MutationObserver(() => {
 	  if (document.documentElement.style.width.includes('calc')) {
@@ -63,8 +63,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <header><ClientOnly>
-    	<mdui-top-app-bar style="background-color: rgb(var(--mdui-color-primary-container));" scroll-behavior="shrink elevate">
+	<header><ClientOnly>
+		<mdui-top-app-bar style="background-color: rgb(var(--mdui-color-primary-container));" scroll-behavior="shrink elevate">
 		<mdui-button-icon @click="drawer.open = !drawer.open">
 			<mdui-icon-menu></mdui-icon-menu>
 		</mdui-button-icon>
@@ -78,11 +78,10 @@ onMounted(async () => {
 			<mdui-icon-light-mode style="color: rgb(var(--mdui-color-on-surface-variant))"></mdui-icon-light-mode>
 		</mdui-button-icon>
 		</mdui-top-app-bar>
-	<template #ssr>
-		<h1>{{ routeStore.title }}</h1>
-    </template></ClientOnly></header>
-    <nav><ClientOnly>
-	    <mdui-navigation-drawer ref='drawer' :open="drawerOpen" close-on-overlay-click close-on-esc style="margin-top: 64px;">
+	<template #ssr><h1>{{ routeStore.title }}</h1>
+	</template></ClientOnly></header>
+	<nav><ClientOnly>
+		<mdui-navigation-drawer ref='drawer' :open="drawerOpen" close-on-overlay-click close-on-esc style="margin-top: 64px;">
 			<mdui-list style="height: 100%; background-color: rgb(var(--mdui-color-surface-variant));">
 				<KeepAlive><mdui-list-item
 					v-for="item in routeStore.allRoutes"
@@ -94,27 +93,25 @@ onMounted(async () => {
 			</mdui-list>
 		</mdui-navigation-drawer>
 	<template #ssr>
-		<ul>
-			<li v-for="item in routeStore.allRoutes"
+		<ul><li v-for="item in routeStore.allRoutes"
 			:key="item.path"
 			:class="{ 'active-item' : item.path == $route.path }"
-			><a :href="item.path">{{ item.name }}</a></li>
-		</ul>
-    </template></ClientOnly>
-    </nav>
-	<main :class="{ 'mdui-prose' : clientOnlyStore.isClient }">
+			><a :href="item.path">{{ item.name }}</a></li></ul>
+	</template></ClientOnly></nav>
+	<main :class="{ 'mdui-prose' : clientOnlyStore.isClient , 'content' : clientOnlyStore.isClient}">
 		<RouterView v-slot="{ Component }">
-	    	<component :is="Component" />
-	    </RouterView>
-	</main>
-    <footer></footer>
+			<component :is="Component" />
+		</RouterView>
+	</main><footer></footer>
 </template>
 
 <style scoped>
 .active-item {
 	background-color: rgb(var(--mdui-color-surface-container-high));
 }
-
+.content {
+	margin: 16px;
+}
 .bottom {
   position: fixed;
   display: flex;
