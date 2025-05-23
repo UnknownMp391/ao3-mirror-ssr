@@ -3,13 +3,29 @@ name: Node.js CI
 on:
   push:
     tags:
-      - 'v*'  # 匹配所有 tag（也可改为 v* 等更具体的匹配）
+      - 'v*'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 获取 Tag 名称
+        id: extract_tag
+        run: echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+
+      - name: 通知：开始构建
+        run: |
+          TAG=${{ steps.extract_tag.outputs.tag }}
+          curl -X POST http://10.0.0.3:52222/send \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "alias": "ci",
+            "message": "[AO3 Mirror SSR][${TAG}]\n开始构建..."
+          }
+          EOF
+
       - name: 检出代码
         uses: actions/checkout@v3
 
@@ -40,6 +56,18 @@ jobs:
           cp server.js index.html package.json build-out/
           zip -r output.zip build-out
 
+      - name: 通知：构建完成
+        run: |
+          TAG=${{ steps.extract_tag.outputs.tag }}
+          curl -X POST http://10.0.0.3:52222/send \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "alias": "ci",
+            "message": "[AO3 Mirror SSR][${TAG}]\n构建完成✅"
+          }
+          EOF
+
       - name: 设置 SSH 私钥
         run: |
           mkdir -p ~/.ssh
@@ -49,9 +77,6 @@ jobs:
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
           echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
       
-      - name: 获取 Tag 名称
-        id: extract_tag
-        run: echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
 
       - name: 上传产物到远程服务器
         run: |
@@ -59,4 +84,14 @@ jobs:
           scp output.zip default@10.0.0.3:/srv/publish/ao3-mirror-ssr/${TAG}.zip
           ssh default@10.0.0.3 sh -c 'cd /srv/publish/ao3-mirror-ssr/; rm -f latest.zip; ln -s ${TAG}.zip latest.zip'
 
-
+      - name: 通知：上传完成
+        run: |
+          TAG=${{ steps.extract_tag.outputs.tag }}
+          curl -X POST http://10.0.0.3:52222/send \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "alias": "ci",
+            "message": "[AO3 Mirror SSR][${TAG}]\n上传完成✅"
+          }
+          EOF
