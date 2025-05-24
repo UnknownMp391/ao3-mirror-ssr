@@ -8,13 +8,13 @@ export const useApiStore = defineStore('api', () => {
 		return await execute()
 	}
 
-	async function postData(url, payload) {
-		const { execute } = useApiRequest('POST', url, payload)
+	async function workSimpleSearch(keyword, page = 1) {
+		const { execute } = useApiRequest('GET', 'search/simple', { keyword, page })
 		return await execute()
 	}
 
 	return {
 		getWork,
-		postData,
+		workSimpleSearch
 	}
 })

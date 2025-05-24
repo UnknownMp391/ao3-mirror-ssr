@@ -1,6 +1,8 @@
 import { useAxios } from '@vueuse/integrations/useAxios'
 import axios from 'axios'
 
+import { objectToQueryString } from '../utils.js'
+
 function getEndpoint() {
   const apiMapping = {
     '': ['http://localhost:28001/', '/api/'],
@@ -20,7 +22,10 @@ function replaceUrl(url) {
 export function useApiRequest(method, url, data, config = {}) {
   const start = Date.now()
   const baseURL = getEndpoint()
-  const fullURL = `${baseURL}${url}`
+  // 若为 GET 请求，将 data 转为查询参数拼接到 URL 上
+  const fullURL = method === 'GET' && data
+    ? `${baseURL}${url}?${objectToQueryString(data)}`
+    : `${baseURL}${url}`
   const {
     response,
     error,
