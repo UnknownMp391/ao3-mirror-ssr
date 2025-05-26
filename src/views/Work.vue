@@ -168,8 +168,8 @@ onBeforeUnmount(() => {
 			<a @click="$router.back()">返回</a>
 		</template>
 		<template v-if="workReadState.state == 'ready'">
-			<h1>{{ workReadState.title }}</h1>
-			<h2>{{ workReadState.pesud }}</h2>
+			<h2>{{ workReadState.title }}</h2>
+			<h4>{{ workReadState.pesud }}</h4>
 			<dl>
 				<template v-if="workReadState.category"><dt>作品圈</dt><ul>
 					<li v-for="item in workReadState.category" :key="item">

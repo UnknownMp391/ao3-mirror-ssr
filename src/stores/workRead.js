@@ -10,7 +10,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 	const id = ref(null)
 	const cid = ref(null)
 	const summary = ref(null)
-	const pesud = ref(null)
+	const pseud = ref(null)
 	const title = ref(null)
 	const text = ref(null)
 	const state = ref('')
@@ -25,7 +25,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		id.value = data.workId
 		title.value = data.title
 		summary.value = [escapeAndFormatText(data.summary)]
-		pesud.value = data.pesud
+		pseud.value = data.pseud
 		text.value = data.text
 		publishedTime.value = data.stats.publishedTime
 		wordCount.value = data.stats.wordCount
@@ -51,7 +51,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		id, cid,
 		title,
 		summary,
-		pesud,
+		pseud,
 		text,
 		state,
 		publishedTime,

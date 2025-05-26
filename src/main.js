@@ -16,5 +16,6 @@ export function createApp() {
 		.component('Hr', Hr)
 		.component('BetterHr', Hr)
 		.component('Form', Form)
+		.component('BetterForm', Form)
 	return { app, pinia }
 }

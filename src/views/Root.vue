@@ -9,9 +9,6 @@ import Intro from '../texts/intro.md'
 
 const router = useRouter()
 
-const err = ref(false)
-const srcText = ref(null)
-
 function convert(from) {
 	if( Number(from) ) {
 		return {
@@ -20,7 +17,6 @@ function convert(from) {
 		}
 	} else if (from.includes('https://archiveofourown.org/works/')) {
 		const sid = from.split('https://archiveofourown.org/works/')[1];
-		console.log(sid)
 		if ( sid ) {
 			const id = Number(sid)
 			if (id) {
@@ -41,16 +37,15 @@ function convert(from) {
 			}
 		}
 	}
-	return { type: null }
+	return { type: 'f', key: from }
 }
 
 function onConvert(data) {
-	const { type, id, cid } = convert(data.src)
+	const { type, id, cid, key } = convert(data.src)
 	if (type == null) {
-		err.value = true
-		srcText.value?.focus()
+	} else if ( type == 'f') {
+		router.push(`/search/simple?keyword=${encodeURIComponent(key)}`)
 	} else {
-		err.value = false
 		if (cid) router.push(`/work/${id}/${cid}`)
 		else router.push(`/work/${id}`)
 	}
@@ -60,14 +55,14 @@ function onConvert(data) {
 
 <template>
 	<img style="display: block; margin: 0px auto 10px;" height="200px" alt="logo" src="/favicon.svg" />
-	<Intro />
-	<br/><Hr/>
+	<h1>欢迎来到 AO3 Mirror! 👋👋</h1>
+	<p>一个基于重构渲染的 AO3 镜像站</p>
+	<Hr />
 	<section id="converter">
 		<h2>链接转换</h2>
-		<p>输入完整链接或者 ID</p>
+		<p>AO3 链接 或 关键词搜索</p>
 		<Form @submit="onConvert"><ClientOnly>
-			<mdui-text-field variant="filled" label="链接" name="src" placeholder="https://archiveofourown.org/works/114514" ref='srcText'>
-			<span v-if='err' slot="helper" class='warn-text'>链接格式错误!</span>
+			<mdui-text-field variant="filled" label="链接 / 关键词" name="src">
 			</mdui-text-field><br/>
 			<div style="display: flex">
 				<div style="flex-grow: 1"></div>
@@ -78,4 +73,7 @@ function onConvert(data) {
 				<input type="submit" />
 		</template></ClientOnly></Form>
 	</section>
+	<Hr/>
+	<Intro />
 </template>
+

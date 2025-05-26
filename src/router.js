@@ -40,20 +40,28 @@ export function createSSRRouter() {
 				hidden: true
 			}
 		},{
+			path: '/search/simple',
+			name: '搜索',
+			component: () => import('./views/SimpleSearch.vue'),
+			meta: {
+				title: '搜索',
+				order: 2
+			}
+		},{
 			path: '/settings',
 			name: '设置',
 			component: () => import('./views/Settings.vue'),
 			meta: {
 				title: '设置',
-				order: 2
+				order: 90
 			},
 		},{
 			path: '/about',
 			name: '关于',
-			component: () => import('./views/About.vue'),
+			component: () => import('./views/About.md'),
 			meta: {
 				title: '',
-				order: 3
+				order: 100
 			},
 		},{
 			path: '/developer',

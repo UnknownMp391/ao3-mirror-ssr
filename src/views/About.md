@@ -1,3 +1,18 @@
+<script setup>
+import About from '../texts/about.md'
+import FunAnimation from '../components/FunAnimation.vue'
+
+import 'mdui/components/avatar.js'
+/*import { onBeforeMount, onMounted, onUnmounted, onBeforeUnmount, onActivated, onDeactivated } from 'vue'
+console.log('Setup')
+onBeforeMount(() => console.log('Before mount'))
+onMounted(() => console.log('Mounted'))
+onDeactivated(() => console.log('Deactivated'))
+onActivated(() => console.log('Activated'))
+onBeforeUnmount(() => console.log('Before unmount'))
+onUnmounted(() => console.log('Unmounted'))*/
+</script>
+
 # 关于
 
 这是什么, 有口舍用 ?
@@ -43,3 +58,5 @@
 本站支持 "Server Side Rendering" by Vite SSR
 
 CDN by Cloudflare (赛博佛祖😭)
+
+<FunAnimation />

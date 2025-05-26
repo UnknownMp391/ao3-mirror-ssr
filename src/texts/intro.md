@@ -1,9 +1,3 @@
-# 欢迎来到 AO3 Mirror! 👋👋
-
-一个基于重构渲染的 AO3 镜像站
-
----
-
 ## 这是什么🤨
 
 本网站是对 ArchiveOfOurOwn (AO3) 的一个镜像网站
@@ -45,3 +39,4 @@
 - ✅ 作品详细数据
 - 📝 搜索
 - ❌ 书签 (本地) **不再支持! [详情](/about#deprecated-feature-bookmark)**
+
