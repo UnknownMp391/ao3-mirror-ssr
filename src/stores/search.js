@@ -7,25 +7,31 @@ export const useSimpleSearchState = defineStore('simpleSearch', () => {
 	const api = useApiStore()
 	const keyword = ref('')
 	const result = ref([])
-	const count = ref([])
+	const count = ref(0)
 	const pageCount = ref(0)
 	const currentPage = ref(0)
 	const state = ref(null)
 	async function load() {
-		if (currentPage.value == pageCount.value) state.value = 'finish'
+		if (pageCount.value && currentPage.value >= pageCount.value){ state.value = 'finish'; return }
 		let res = await api.workSimpleSearch(keyword.value, currentPage.value)
 		res = res.data
+		if( pageCount.value ) {
+			currentPage.value++
+			if (currentPage.value > pageCount.value) currentPage.value = pageCount.value
+		}
 		if (res.code == 0) {
-			currentPage.value = res.page
-			pageCount.value = res.pageCount
+			if ( !pageCount.value )  {
+				pageCount.value = res.pageCount
+				currentPage.value = res.page
+			}
 			count.value = res.count
 			state.value = import.meta.env.SSR ? 'ssrready' : 'ready'
 			result.value.push(...res.works)
 		} else if (res.code == 1) {
-			if (currentPage.value) {
+			if ( count.value ) {
 				state.value = 'finish'
 			} else {
-				currentPage.value = 1
+				currentPage.value = 0
 				state.value = 'notfound'
 			}
 		}
@@ -35,7 +41,8 @@ export const useSimpleSearchState = defineStore('simpleSearch', () => {
 		keyword.value = key
 		result.value = []
 		state.value = 'loading'
-		currentPage.value = 0
+		currentPage.value = 1
+		pageCount.value = 0
 		await load()
 	} 
 	
