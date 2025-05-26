@@ -37,7 +37,7 @@ onMounted(async () => {
 	isObserver = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
-				simpleSearchState.load()
+				if (simpleSearchState.state == 'ready') simpleSearchState.load()
 			}
 		})
 	}, { threshold: 1 })
@@ -50,6 +50,7 @@ onBeforeUnmount(() => {
 })
 
 function onSubmit(data) {
+
 	if (simpleSearchState) simpleSearchState.start(data.src)
 }
 
