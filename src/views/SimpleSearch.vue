@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, nextTick, onServerPrefetch, onBeforeUnmount	 } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import 'mdui/components/text-field.js'
 import 'mdui/components/card.js'
@@ -9,6 +9,7 @@ import { escapeAndFormatText } from '../utils.js'
 import { useSimpleSearchState } from '../stores/search.js'
 
 const route = useRoute()
+const router = useRouter()
 
 const simpleSearchState = useSimpleSearchState()
 
@@ -32,6 +33,7 @@ onServerPrefetch(async () => {
 })
 
 onMounted(async () => {
+	watch(() => simpleSearchState.keyword, () => document.title = simpleSearchState.keyword)
 	inputField.value = route.query.keyword || ''
 	if (inputField.value && simpleSearchState != 'ssrready') simpleSearchState.start(inputField.value)
 	isObserver = new IntersectionObserver((entries) => {
@@ -50,8 +52,10 @@ onBeforeUnmount(() => {
 })
 
 function onSubmit(data) {
-
-	if (simpleSearchState) simpleSearchState.start(data.src)
+	if (simpleSearchState) {
+		simpleSearchState.start(data.src)
+		router.replace(`/search/simple?keyword=${encodeURIComponent(data.src)}`)
+	}
 }
 
 </script>

@@ -21,10 +21,13 @@ export const useWorkReadState = defineStore('workRead', () => {
 	const category = ref([])
 	const fandom = ref([])
 	const lang = ref(null)
+	const chapters = ref([])
+	const chapterIndex = ref(null)
 	function setData(data) {
+		cid.value = data.chapterId
 		id.value = data.workId
 		title.value = data.title
-		summary.value = [escapeAndFormatText(data.summary)]
+		summary.value = data.summary ? escapeAndFormatText(data.summary) : null
 		pseud.value = data.pseud
 		text.value = data.text
 		publishedTime.value = data.stats.publishedTime
@@ -34,11 +37,26 @@ export const useWorkReadState = defineStore('workRead', () => {
 		category.value = data.category
 		fandom.value = data.fandom
 		lang.value = data.lang
+		chapters.value = data.chapters || []
+		chapterIndex.value = data.chapterIndex ?? null
 	}
 	async function loadWork(target, targetc) {
-		if (target == id.value && targetc == cid.value || state.value == 'loading') return
+		const itarget = parseInt(target)
+		if (isNaN(itarget)) {
+			console.log('a')
+			state.value = 'errformat'
+			return
+		}
+		const itargetc = parseInt(targetc)
+		if (
+			itarget === id.value &&
+			(itargetc === cid.value || (isNaN(itargetc) && cid.value === null)) &&
+			state.value !== 'loading'
+		) return
+		id.value = itarget
+		cid.value = isNaN(itargetc) ? null : itargetc
 		state.value = 'loading'
-		const result = await api.getWork(target, targetc)
+		const result = await api.getWork(id.value, cid.value)
 		if (result.status == 200) {
 			setData(result.data)
 			state.value = 'ready'
@@ -61,6 +79,8 @@ export const useWorkReadState = defineStore('workRead', () => {
 		category,
 		fandom,
 		lang,
+		chapters,
+		chapterIndex,
 		setData,
 		loadWork
 	}
