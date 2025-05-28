@@ -39,7 +39,7 @@ onMounted(async () => {
 	isObserver = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
-				if (simpleSearchState.state == 'ready') simpleSearchState.load()
+				if (simpleSearchState.state == 'ready' || simpleSearchState.state == 'ssrready') setTimeout(simpleSearchState.load,400)
 			}
 		})
 	}, { threshold: 1 })

@@ -163,8 +163,12 @@ async function switchWorkWithIndex(target) {
 					</dl>
 				</mdui-card>
 				<template v-if="workReadState.cid">
-					<p>第 {{ workReadState.chapterIndex + 1 }} / {{ workReadState.chapters.length }} 章: {{ workReadState.chapters[workReadState.chapterIndex].title }}</p>
-					<mdui-button variant='filled' @click="chapterDialog.open = true">章节列表</mdui-button>
+					<h4>第 {{ workReadState.chapterIndex + 1 }} / {{ workReadState.chapters.length }} 章: {{ workReadState.chapters[workReadState.chapterIndex].title }}</h4>
+					<div style="display: flex;">
+					<mdui-button variant="filled" v-if="workReadState.chapterIndex != 0" @click="switchWorkWithIndex(workReadState.chapterIndex - 1)">上一章</mdui-button>
+					<mdui-button variant='elevated' @click="chapterDialog.open = true" style="margin: 0px 16px;">章节列表</mdui-button>
+					<mdui-button variant="filled" v-if="workReadState.chapterIndex != workReadState.chapters.length - 1" @click="switchWorkWithIndex(workReadState.chapterIndex + 1)">下一章</mdui-button>
+					</div><br/>
 				</template>
 				<blockquote v-if="workReadState.summary">
 					<p v-html='workReadState.summary'></p>
@@ -192,7 +196,11 @@ async function switchWorkWithIndex(target) {
 				<br/>
 					点击跳转
 				</span>
-				<mdui-list><mdui-list-item v-for="(chapter,index) in workReadState.chapters" :key="chapter.chapterId" @click="switchWorkWithIndex(index)">
+				<mdui-list><mdui-list-item
+					v-for="(chapter,index) in workReadState.chapters"
+					:key="chapter.chapterId" @click="switchWorkWithIndex(index)"
+					:class="{ 'active-item' : index === workReadState.chapterIndex }"
+				>
 					{{index + 1}}. {{ chapter.title }}
 				</mdui-list-item></mdui-list>
 			</mdui-dialog>
@@ -249,6 +257,9 @@ async function switchWorkWithIndex(target) {
 </template>
 
 <style scoped>
+.active-item {
+	background-color: rgb(var(--mdui-color-secondary-container-light));
+}
 .mdui-fab {
     position: fixed;
     bottom: 16px; /* 调整垂直位置 */

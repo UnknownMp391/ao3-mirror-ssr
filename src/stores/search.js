@@ -13,16 +13,15 @@ export const useSimpleSearchState = defineStore('simpleSearch', () => {
 	const state = ref(null)
 	async function load() {
 		if (pageCount.value && currentPage.value >= pageCount.value){ state.value = 'finish'; return }
+		state.value = 'loading'
 		let res = await api.workSimpleSearch(keyword.value, currentPage.value)
 		res = res.data
-		if( pageCount.value ) {
-			currentPage.value++
-			if (currentPage.value > pageCount.value) currentPage.value = pageCount.value
-		}
 		if (res.code == 0) {
-			if ( !pageCount.value )  {
+			currentPage.value++
+			if( pageCount.value ) {
+				if (currentPage.value > pageCount.value) currentPage.value = pageCount.value
+			} else {
 				pageCount.value = res.pageCount
-				currentPage.value = res.page
 			}
 			count.value = res.count
 			state.value = import.meta.env.SSR ? 'ssrready' : 'ready'
