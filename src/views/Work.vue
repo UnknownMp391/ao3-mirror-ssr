@@ -56,7 +56,7 @@ onMounted(async () => {
 	if (workReadState.state != 'ssrnotfound') await workReadState.loadWork(route.params.id, route.params.cid)
 	if (workReadState.state == 'ready') {
 		routeState.customTitle = workReadState.title
-		if (parseInt(route.params.cid) != workReadState.cid) {
+		if (workReadState.cid !== null && parseInt(route.params.cid) != workReadState.cid) {
 			router.replace(`/work/${workReadState.id}/${workReadState.cid}`)
 			return;
 		}
@@ -89,7 +89,6 @@ onMounted(async () => {
 		paragraphs = content.value?.querySelectorAll('p');
 		paragraphs?.forEach(p => isObserver.observe(p));
 	}
-	console.log(workReadState.chapterStat)
 })
 
 onBeforeUnmount(() => {
@@ -163,7 +162,7 @@ async function switchWorkWithIndex(target) {
 						</dd></template>
 					</dl>
 				</mdui-card>
-				<template v-if="workReadState.chapters">
+				<template v-if="workReadState.cid">
 					<p>第 {{ workReadState.chapterIndex + 1 }} / {{ workReadState.chapters.length }} 章: {{ workReadState.chapters[workReadState.chapterIndex].title }}</p>
 					<mdui-button variant='filled' @click="chapterDialog.open = true">章节列表</mdui-button>
 				</template>
@@ -174,7 +173,7 @@ async function switchWorkWithIndex(target) {
 					<p v-for="(para, index) in workReadState.text" :key="para" :data-index="index">{{ para }}</p>
 				</article>
 			</article><Hr/>
-			<p style="display: flex;" v-if="workReadState.chapters">
+			<p style="display: flex;" v-if="workReadState.cid">
 				<mdui-button variant="filled" v-if="workReadState.chapterIndex != 0" @click="switchWorkWithIndex(workReadState.chapterIndex - 1)">上一章</mdui-button>
 				<span style="flex: 1;"/>
 				{{ workReadState.chapterIndex + 1 }} / {{ workReadState.chapters.length }}
