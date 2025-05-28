@@ -23,6 +23,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 	const lang = ref(null)
 	const chapters = ref([])
 	const chapterIndex = ref(null)
+	const chapterStat = ref(null)
 	function setData(data) {
 		cid.value = data.chapterId
 		id.value = data.workId
@@ -39,6 +40,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		lang.value = data.lang
 		chapters.value = data.chapters || []
 		chapterIndex.value = data.chapterIndex ?? null
+		chapterStat.value = data.stats.chapter
 	}
 	async function loadWork(target, targetc) {
 		const itarget = parseInt(target)
@@ -81,6 +83,7 @@ export const useWorkReadState = defineStore('workRead', () => {
 		lang,
 		chapters,
 		chapterIndex,
+		chapterStat,
 		setData,
 		loadWork
 	}

@@ -89,6 +89,7 @@ onMounted(async () => {
 		paragraphs = content.value?.querySelectorAll('p');
 		paragraphs?.forEach(p => isObserver.observe(p));
 	}
+	console.log(workReadState.chapterStat)
 })
 
 onBeforeUnmount(() => {
@@ -154,6 +155,12 @@ async function switchWorkWithIndex(target) {
 						<dt>点击</dt><dd>
 							{{ workReadState.hitCount }}
 						</dd>
+						<template v-if="workReadState.chapterStat"><dt>
+							章节
+						</dt><dd>
+							{{ workReadState.chapterStat.left }} /
+							{{ workReadState.chapterStat.right == -1 ? '?' : workReadState.chapterStat.right }}
+						</dd></template>
 					</dl>
 				</mdui-card>
 				<template v-if="workReadState.chapters">
@@ -162,13 +169,11 @@ async function switchWorkWithIndex(target) {
 				</template>
 				<blockquote v-if="workReadState.summary">
 					<p v-html='workReadState.summary'></p>
-				</blockquote>
-				<Hr />
+				</blockquote><Hr />
 				<article ref='content'>
 					<p v-for="(para, index) in workReadState.text" :key="para" :data-index="index">{{ para }}</p>
 				</article>
-			</article>
-			<Hr/>
+			</article><Hr/>
 			<p style="display: flex;" v-if="workReadState.chapters">
 				<mdui-button variant="filled" v-if="workReadState.chapterIndex != 0" @click="switchWorkWithIndex(workReadState.chapterIndex - 1)">上一章</mdui-button>
 				<span style="flex: 1;"/>
@@ -229,12 +234,16 @@ async function switchWorkWithIndex(target) {
 				<dt>点击</dt><dd>
 					{{ workReadState.hitCount }}
 				</dd>
-			</dl>
-			<Hr />
+				<template v-if="workReadState.chapterStat"><dt>
+					章节
+				</dt><dd>
+					{{ workReadState.chapterStat.left }} /
+					{{ workReadState.chapterStat.right == -1 ? '?' : workReadState.chapterStat.right }}
+				</dd></template>
+			</dl><Hr />
 			<template v-if="workReadState.summary"><blockquote>
 				<p v-html='workReadState.summary'></p>
-			</blockquote>
-			<Hr /></template>
+			</blockquote><Hr /></template>
 			<article><p v-for="para in workReadState.text.slice(0, 20)" :key="para">{{ para }}</p></article>
 		</template>
 	</template></ClientOnly>
