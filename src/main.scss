@@ -5,8 +5,6 @@ $font-family: Roboto, Noto Sans SC, PingFang SC, Lantinghei SC,
 $bg-color: rgb(var(--mdui-color-background));
 $error-color: rgb(var(--mdui-color-error));
 $on-error-color: rgb(var(--mdui-color-on-error));
-$transition-duration: var(--mdui-motion-duration-short2);
-$transition-easing: var(--mdui-motion-easing-linear);
 
 html {
   scroll-padding-top: 64px;
@@ -15,7 +13,6 @@ html {
 body {
   font-family: $font-family;
   background-color: $bg-color;
-  transition: opacity $transition-duration $transition-easing;
 }
 
 pre {
@@ -48,4 +45,3 @@ mdui-text-field {
 .no-select {
   user-select: none;
 }
-

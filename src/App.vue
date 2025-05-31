@@ -25,10 +25,10 @@ import '@mdui/icons/light-mode.js'
 import '@mdui/icons/menu.js'
 
 const clientOnlyStore = useClientOnlyStore()
-const api = useApiStore()
-let themeScheme = null
-const mobileScreen = useMobileScreen()
 const routeStore = useRouteStore()
+const api = useApiStore()
+const mobileScreen = useMobileScreen()
+let themeScheme = null
 
 const drawerOpen = ref(false)
 const drawer = ref(null)

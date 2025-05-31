@@ -46,7 +46,7 @@ function onConvert(data) {
 </script>
 
 <template>
-	<img style="display: block; margin: 0px auto 10px;" height="200px" alt="logo" src="/favicon.svg" />
+	<img style="display: block; margin: 0px auto 10px;" height="200px" width="200px" alt="logo" src="/favicon.svg" />
 	<h1>欢迎来到 AO3 Mirror! 👋👋</h1>
 	<p>一个基于重构渲染的 AO3 镜像站</p><Hr />
 	<section id="converter">
