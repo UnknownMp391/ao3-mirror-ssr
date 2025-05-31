@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted, onServerPrefetch, onBeforeUnmount, watch, nextTick } from 'vue'
-import { useRouter, useRoute, RouterView } from 'vue-router'
+import { ref, onMounted, onBeforeUnmount, onServerPrefetch, watch, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 
 import { useWorkReadState } from '@/stores/workRead.js'
-const workReadState = useWorkReadState()
-
 import { useRouteStore } from '@/stores/route.js'
+
 const routeState = useRouteStore()
+const workReadState = useWorkReadState()
 
 import 'mdui/components/list.js'
 import 'mdui/components/list-item.js'
@@ -22,10 +22,6 @@ import 'mdui/components/menu-item.js'
 import 'mdui/components/card.js'
 
 import '@mdui/icons/bookmark.js'
-
-import { confirm } from 'mdui/functions/confirm.js'
-import { snackbar } from 'mdui/functions/snackbar.js'
-import { prompt } from 'mdui/functions/prompt.js'
 
 import { mduiSnackbar } from '../utils.js'
 
@@ -47,9 +43,7 @@ const categoryName = {
 	fm: '女/男'
 }
 
-onServerPrefetch(async () => {
-	await workReadState.loadWork(route.params.id, route.params.cid)
-})
+onServerPrefetch(async () => await workReadState.loadWork(route.params.id, route.params.cid))
 
 onMounted(async () => {
 	watch(() => workReadState.state, (value) => { if (value == 'ready') routeState.customTitle = workReadState.title })
@@ -58,7 +52,7 @@ onMounted(async () => {
 		routeState.customTitle = workReadState.title
 		if (workReadState.cid !== null && parseInt(route.params.cid) != workReadState.cid) {
 			router.replace(`/work/${workReadState.id}/${workReadState.cid}`)
-			return;
+			return
 		}
 		const paraCount = workReadState.text.length - 1
 		isObserver = new IntersectionObserver((entries) => {
@@ -86,17 +80,15 @@ onMounted(async () => {
 			threshold: 0.5
 		})
 		await nextTick()
-		paragraphs = content.value?.querySelectorAll('p');
-		paragraphs?.forEach(p => isObserver.observe(p));
+		paragraphs = content.value?.querySelectorAll('p')
+		paragraphs?.forEach(p => isObserver.observe(p))
 	}
 })
 
-onBeforeUnmount(() => {
-	if(isObserver) isObserver.disconnect();
-})
+onBeforeUnmount(() => { if(isObserver) isObserver.disconnect() })
 
 async function switchWorkWithIndex(target) {
-	workReadState.loadWork(workReadState.id,workReadState.chapters[target].chapterId);
+	workReadState.loadWork(workReadState.id,workReadState.chapters[target].chapterId)
 	router.replace(`/work/${workReadState.id}/${workReadState.cid}`)
 }
 </script>

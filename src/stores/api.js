@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useApiRequest } from '../composables/apiRequest'
+import { useApiRequest } from '../composables/apiRequest.js'
 
 export const useApiStore = defineStore('api', () => {
 	async function getWork(workId, chapterId) {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, nextTick, onServerPrefetch, onBeforeUnmount	 } from 'vue'
+import { ref, watch, onMounted, nextTick, onServerPrefetch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import 'mdui/components/text-field.js'
@@ -26,11 +26,7 @@ const stateLabel = {
 
 let isObserver = null
 
-onServerPrefetch(async () => {
-	if (route.query.keyword) {
-		await simpleSearchState.start(route.query.keyword)
-	}
-})
+onServerPrefetch(async () => { if (route.query.keyword) await simpleSearchState.start(route.query.keyword) })
 
 onMounted(async () => {
 	watch(() => simpleSearchState.keyword, () => document.title = simpleSearchState.keyword)
@@ -38,18 +34,14 @@ onMounted(async () => {
 	if (inputField.value && simpleSearchState != 'ssrready') simpleSearchState.start(inputField.value)
 	isObserver = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				if (simpleSearchState.state == 'ready' || simpleSearchState.state == 'ssrready') setTimeout(simpleSearchState.load,400)
-			}
+			if (entry.isIntersecting) if (simpleSearchState.state == 'ready' || simpleSearchState.state == 'ssrready') setTimeout(simpleSearchState.load,400)
 		})
 	}, { threshold: 1 })
 	await nextTick()
 	isObserver.observe(label.value)
 })
 
-onBeforeUnmount(() => {
-	isObserver.disconnect();
-})
+onBeforeUnmount(() => isObserver.disconnect())
 
 function onSubmit(data) {
 	if (simpleSearchState) {
@@ -57,7 +49,6 @@ function onSubmit(data) {
 		router.replace(`/search/simple?keyword=${encodeURIComponent(data.src)}`)
 	}
 }
-
 </script>
 
 <template>
@@ -79,14 +70,12 @@ function onSubmit(data) {
 	<template v-if="simpleSearchState.result" v-for="work in simpleSearchState.result" :key="work.workId">
 		<ClientOnly><mdui-card style="margin: 8px 0px;"><article>
 			<router-link :to="`/work/${work.workId}`"><h3>{{ work.title }}</h3></router-link>
-			<h4>{{ work.pseud }}</h4>
-			<Hr />
+			<h4>{{ work.pseud }}</h4><Hr />
 			<p v-html="escapeAndFormatText(work.summary)"></p>
 		</article></mdui-card><template #ssr>
 			<router-link :to="`/work/${work.workId}`"><h3>{{ work.title }}</h3></router-link>
 			<h4>{{ work.pseud }}</h4>
-			<p>{{ work.summary }}</p>
-			<Hr />
+			<p>{{ work.summary }}</p><Hr />
 		</template></ClientOnly>
 	</template>
 	<p style="display: flex;" ref='label'>

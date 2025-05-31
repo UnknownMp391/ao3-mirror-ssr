@@ -1,6 +1,8 @@
 <script setup>
-import { onMounted, onBeforeMount, onServerPrefetch, nextTick, ref, watch } from 'vue'
-import { useRouter, useRoute, RouterView } from 'vue-router'
+import 'mdui/mdui.css'
+import './main.scss'
+
+import { onMounted, onBeforeMount, nextTick, ref, watch } from 'vue'
 
 import { useApiStore } from '@/stores/api.js'
 
@@ -22,9 +24,6 @@ import '@mdui/icons/arrow-back.js'
 import '@mdui/icons/light-mode.js'
 import '@mdui/icons/menu.js'
 
-const router = useRouter()
-const route = useRoute()
-
 const clientOnlyStore = useClientOnlyStore()
 const api = useApiStore()
 let themeScheme = null
@@ -35,26 +34,17 @@ const drawerOpen = ref(false)
 const drawer = ref(null)
 const closeDrawer = ref(true)
 
-let progressTimer = null
-
-onServerPrefetch(async () => {
-
-})
-
 onBeforeMount(() => {
+	themeScheme = useThemeStore()
 	mobileScreen.reCal()
 	if(!mobileScreen.isMobile) drawerOpen.value = true
 })
 
 onMounted(async () => {
-	themeScheme = useThemeStore()
 	themeScheme.applyTheme()
 	clientOnlyStore.setClient()
-	new MutationObserver(() => {
-	  if (document.documentElement.style.width.includes('calc')) {
-		document.documentElement.style.width = '';
-	  }
-	}).observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+	new MutationObserver(() => { if (document.documentElement.style.width.includes('calc')) document.documentElement.style.width = '' })
+	.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 	watch(() => mobileScreen.isMobile, (newV, oldV) => {
 		if( oldV && !newV ) nextTick(() => drawer.value.open = true)
 		if( !oldV && newV ) nextTick(() => drawer.value.open = false)
@@ -65,12 +55,7 @@ onMounted(async () => {
 <template>
 	<header><ClientOnly>
 		<mdui-top-app-bar style="background-color: rgb(var(--mdui-color-primary-container));" scroll-behavior="shrink elevate">
-		<mdui-button-icon @click="drawer.open = !drawer.open">
-			<mdui-icon-menu></mdui-icon-menu>
-		</mdui-button-icon>
-		<!--<mdui-button-icon @click="$router.back()" v-if="$route.path != '/'">
-			<mdui-icon-arrow-back></mdui-icon-arrow-back>
-		</mdui-button-icon>-->
+		<mdui-button-icon @click="drawer.open = !drawer.open"><mdui-icon-menu></mdui-icon-menu></mdui-button-icon>
 		<mdui-top-app-bar-title style="color: rgb(var(--mdui-color-on-surface-variant))">{{ routeStore.title }}</mdui-top-app-bar-title>
 		<mdui-circular-progress v-if="routeStore.showProgress" :value='routeStore.progress' :max='routeStore.progressMax'></mdui-circular-progress>
 		<div style="flex-grow: 1"></div>
@@ -98,10 +83,8 @@ onMounted(async () => {
 			:class="{ 'active-item' : item.path == $route.path }"
 			><a :href="item.path">{{ item.name }}</a></li></ul>
 	</template></ClientOnly></nav>
-	<main :class="{ 'mdui-prose' : clientOnlyStore.isClient , 'content' : clientOnlyStore.isClient}">
-		<RouterView v-slot="{ Component }">
-			<component :is="Component" />
-		</RouterView>
+	<main :class="{ 'mdui-prose' : clientOnlyStore.isClient , 'content' : clientOnlyStore.isClient }">
+		<RouterView />
 	</main><footer></footer>
 </template>
 

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
-import { useStorage, watchWithFilter, debounceFilter } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 
 const CURRENT_VERSION = 1
 

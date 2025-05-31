@@ -1,9 +1,3 @@
-<template>
-  <form @submit="handleSubmit">
-    <slot></slot>
-  </form>
-</template>
-
 <script setup>
 import { ref } from 'vue'
 
@@ -17,4 +11,10 @@ function handleSubmit(event) {
   emit('submit', data, event)
 }
 </script>
+
+<template>
+  <form @submit="handleSubmit">
+    <slot></slot>
+  </form>
+</template>
 

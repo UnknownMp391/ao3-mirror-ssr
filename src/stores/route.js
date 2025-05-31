@@ -21,9 +21,7 @@ export const useRouteStore = defineStore('route', () => {
 		if (lastFromDrawer.value == 0) {
 			lastFromDrawer.value = 1
 			router.push(target)
-		} else {
-			router.replace(target)
-		}
+		} else router.replace(target)
 	}
 	const progress = ref(0)
 	const progressMax = ref(1)
@@ -32,11 +30,9 @@ export const useRouteStore = defineStore('route', () => {
 		watch(title, title => document.title = title)
 		let progressTimer = null
 		router.beforeEach((to, from) => {
-			if (lastFromDrawer.value == 2) {
-				lastFromDrawer.value = 0
-			} else if (lastFromDrawer.value == 1) {
-				lastFromDrawer.value = 2
-			}
+			if (showProgress.value) return false
+			if (lastFromDrawer.value == 2) lastFromDrawer.value = 0
+			else if (lastFromDrawer.value == 1) lastFromDrawer.value = 2
 			progress.value = 0
 			progressMax.value = 1
 			showProgress.value = true
