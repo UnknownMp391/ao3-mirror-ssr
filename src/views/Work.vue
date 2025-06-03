@@ -250,7 +250,7 @@ async function switchWorkWithIndex(target) {
 
 <style scoped>
 .active-item {
-	background-color: rgb(var(--mdui-color-secondary-container-light));
+	background-color: rgb(var(--mdui-color-secondary-container));
 }
 .mdui-fab {
     position: fixed;

@@ -1,0 +1,3 @@
+Sitemap: https://ao3.unknownmp.top/sitemap.xml
+User-agent: *
+Disallow: /assets/
