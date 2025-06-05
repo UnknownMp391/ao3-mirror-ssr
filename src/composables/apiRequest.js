@@ -20,9 +20,7 @@ function replaceUrl(url) {
 }
 
 export function useApiRequest(method, url, data, config = {}) {
-  const start = Date.now()
   const baseURL = getEndpoint()
-  // 若为 GET 请求，将 data 转为查询参数拼接到 URL 上
   const fullURL = method === 'GET' && data
     ? `${baseURL}${url}?${objectToQueryString(data)}`
     : `${baseURL}${url}`
@@ -45,14 +43,14 @@ export function useApiRequest(method, url, data, config = {}) {
     }
   )
   const exec = async () => {
-    await execute()
+    const start = Date.now()
+    try { await execute() }
+    catch (e) {}
     const stop = Date.now()
     return {
       status: response.value?.status || (error.value?.response?.status ?? -1),
       data: response.value?.data || error.value?.response?.data || null,
       duration: stop - start,
-      start,
-      stop,
       error: error.value,
       isSSR: import.meta.env.SSR,
     }

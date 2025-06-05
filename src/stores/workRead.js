@@ -62,9 +62,10 @@ export const useWorkReadState = defineStore('workRead', () => {
 		if (result.status == 200) {
 			setData(result.data)
 			state.value = 'ready'
-		} else {
-			id.value = target
+		} else if (result.status == 404) {
 			state.value = import.meta.env.SSR ? 'ssrnotfound' : 'notfound'
+		} else if (result.status == 401) {
+			state.value = 'unauth'
 		}
 	}
 	return {

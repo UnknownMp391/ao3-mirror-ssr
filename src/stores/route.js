@@ -2,6 +2,8 @@ import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 
+import { useHeadHelper } from '../ssr/headHelper.js'
+
 export const useRouteStore = defineStore('route', () => {
 	const router = useRouter()
 	const route = useRoute()
@@ -16,7 +18,9 @@ export const useRouteStore = defineStore('route', () => {
 	)
 	const lastFromDrawer = ref(0)
  	const customTitle = ref(null)
-	const title = computed(() => customTitle.value || route.meta.title || route.name)
+	const title = import.meta.env.SSR ?
+		computed(() => route.meta.title || route.name) :
+		computed(() => customTitle.value || route.meta.title || route.name)
 	function drawerPress(target) {
 		if (lastFromDrawer.value == 0) {
 			lastFromDrawer.value = 1

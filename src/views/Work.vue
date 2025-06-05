@@ -4,6 +4,8 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 
+import { useHeadHelper } from '../ssr/headHelper.js'
+
 import { useWorkReadState } from '@/stores/workRead.js'
 import { useRouteStore } from '@/stores/route.js'
 
@@ -43,11 +45,23 @@ const categoryName = {
 	fm: '女/男'
 }
 
-onServerPrefetch(async () => await workReadState.loadWork(route.params.id, route.params.cid))
+onServerPrefetch(async () => {
+	const headHelper = useHeadHelper()
+	await workReadState.loadWork(route.params.id, route.params.cid)
+	if (workReadState.state == 'ready') headHelper.setTitle(workReadState.title)
+	else if (workReadState.state == 'ssrnotfound') {
+		headHelper.setTitle('文章未找到')
+		headHelper.setCode(404)
+	} else if (workReadState.state == 'unauth') {
+		headHelper.setTitle('访问被阻止')
+		headHelper.setCode(401)
+	}
+	headHelper.headReady()
+})
 
 onMounted(async () => {
 	watch(() => workReadState.state, (value) => { if (value == 'ready') routeState.customTitle = workReadState.title })
-	if (workReadState.state != 'ssrnotfound') await workReadState.loadWork(route.params.id, route.params.cid)
+	if (workReadState.state != 'ssrnotfound' && workReadState.state != 'ready') await workReadState.loadWork(route.params.id, route.params.cid)
 	if (workReadState.state == 'ready') {
 		routeState.customTitle = workReadState.title
 		if (workReadState.cid !== null && parseInt(route.params.cid) != workReadState.cid) {
@@ -94,27 +108,33 @@ async function switchWorkWithIndex(target) {
 </script>
 
 <template>
-	<ClientOnly>
+	<template v-if="workReadState.state == 'notfound' || workReadState.state == 'ssrnotfound'">
+		<h2>文章不存在...</h2>
+		是不是链接没有复制完全?<br/>
+		ID: {{ workReadState.id }}<br/>
+		<template v-if="workReadState.cid">
+			CID: {{ workReadState.cid }}
+		</template>
+		<a @click="$router.back()">返回</a>
+	</template><template v-if="workReadState.state == 'unauth'">
+		<h2>访问被阻止!</h2>
+		上游 AO3 不允许匿名用户访问该作品<br/>
+		ID: {{workReadState.id}}<br/>
+		<template v-if="workReadState.cid">
+			CID: {{ workReadState.cid }}
+		</template>
+		<a @click="$router.back()">返回</a>
+	</template><template v-if="workReadState.state == 'errformat'">
+		<h2>路径格式错误</h2>
+		ID: {{ $route.params.id }}<br/>
+		<template v-if="$route.params.id">
+			CID: {{ $route.params.id }}
+		</template><br/>
+		 <a @click="$router.back()">返回</a>
+	</template><ClientOnly>
 		<template v-if="workReadState.state == 'loading'">
 			加载中...<br/>
 			<mdui-linear-progress></mdui-linear-progress>
-		</template>
-		<template v-if="workReadState.state == 'notfound' || workReadState.state == 'ssrnotfound'">
-			<h2>文章不存在...</h2>
-			是不是链接没有复制完全?<br/>
-			ID: {{ workReadState.id }}<br/>
-			<template v-if="workReadState.cid">
-				CID: {{ workReadState.cid }}
-			</template>
-			<a @click="$router.back()">返回</a>
-		</template>
-		<template v-if="workReadState.state == 'errformat'">
-			 <h2>路径格式错误</h2>
-			ID: {{ $route.params.id }}<br/>
-			<template v-if="$route.params.id">
-				CID: {{ $route.params.id }}
-			</template><br/>
-			 <a @click="$router.back()">返回</a>
 		</template>
 		<template v-if="workReadState.state == 'ready'">
 			<article>
@@ -198,15 +218,6 @@ async function switchWorkWithIndex(target) {
 			</mdui-dialog>
 		</template>
 	<template #ssr>
-		<template v-if="workReadState.state == 'notfound' || workReadState.state == 'ssrnotfound'">
-			<h2>文章不存在...</h2>
-			是不是链接没有复制完全?<br/>
-			ID: {{workReadState.id}}<br/>
-			<template v-if="workReadState.cid">
-				CID: {{ workReadState.cid }}
-			</template>
-			<a @click="$router.back()">返回</a>
-		</template>
 		<template v-if="workReadState.state == 'ready'">
 			<h2>{{ workReadState.title }}</h2>
 			<h4>{{ workReadState.pesud }}</h4>
