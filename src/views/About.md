@@ -21,9 +21,10 @@ onUnmounted(() => console.log('Unmounted'))*/
 ---
 一个 AO3 镜像站, 优化了 UI/UX
 
-作者 (1)
+作者 {#contact}
 ---
 - [UnknownMp](https://www.unknownmp.top)  
+  邮件: unknownmp@unknownmp.top  
   <mdui-avatar src="https://cdn.unknownmp.top/website/logo.jpg"></mdui-avatar>
 
 ---

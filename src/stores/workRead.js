@@ -15,6 +15,8 @@ export const useWorkReadState = defineStore('workRead', () => {
 	const text = ref(null)
 	const state = ref('')
 	const publishedTime = ref(null)
+	const completedTime = ref(null)
+	const updatedTime = ref(null)
 	const wordCount = ref(0)
 	const kudoCount = ref(0)
 	const hitCount = ref(0)
@@ -32,6 +34,8 @@ export const useWorkReadState = defineStore('workRead', () => {
 		pseud.value = data.pseud
 		text.value = data.text
 		publishedTime.value = data.stats.publishedTime
+		completedTime.value = data.stats.completedTime
+		updatedTime.value = data.stats.updatedTime
 		wordCount.value = data.stats.wordCount
 		kudoCount.value = data.stats.kudoCount
 		hitCount.value = data.stats.hitCount
@@ -66,26 +70,20 @@ export const useWorkReadState = defineStore('workRead', () => {
 			state.value = import.meta.env.SSR ? 'ssrnotfound' : 'notfound'
 		} else if (result.status == 401) {
 			state.value = 'unauth'
+		} else if (result.status == 500) {
+			state.value = 'error'
 		}
 	}
 	return {
 		id, cid,
-		title,
-		summary,
-		pseud,
-		text,
-		state,
+		title, summary,
+		pseud, text, state,
 		publishedTime,
-		wordCount,
-		kudoCount,
-		hitCount,
-		category,
-		fandom,
-		lang,
-		chapters,
-		chapterIndex,
-		chapterStat,
-		setData,
-		loadWork
+		completedTime,
+		updatedTime,
+		wordCount, kudoCount, hitCount,
+		category, fandom, lang,
+		chapters, chapterIndex, chapterStat,
+		setData, loadWork
 	}
 })

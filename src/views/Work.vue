@@ -122,7 +122,16 @@ async function switchWorkWithIndex(target) {
 		ID: {{workReadState.id}}<br/>
 		<template v-if="workReadState.cid">
 			CID: {{ workReadState.cid }}
-		</template>
+		</template><br/>
+		<a @click="$router.back()">返回</a>
+	</template><template v-if="workReadState.state == 'error'">
+		<h2>内部服务器错误</h2>
+		这种情况不是你的问题, 而是我给网站写的屎山代码发力了, 在 <a href="/about#contact">这里</a> 联系我修复此问题<br/>
+		并提供以下信息:<br/>
+		ID: {{workReadState.id}}<br/>
+		<template v-if="workReadState.cid">
+			CID: {{ workReadState.cid }}
+		</template><br/>
 		<a @click="$router.back()">返回</a>
 	</template><template v-if="workReadState.state == 'errformat'">
 		<h2>路径格式错误</h2>
@@ -138,9 +147,10 @@ async function switchWorkWithIndex(target) {
 		</template>
 		<template v-if="workReadState.state == 'ready'">
 			<article>
-				<h1 style="margin: auto">{{ workReadState.title }}</h1>
-				<h4>{{ workReadState.pesud }}</h4>
-				<mdui-card style="margin: 8px; padding: 16px;">
+				<h1>{{ workReadState.title }}</h1>
+				<h4>{{ workReadState.pseud }}</h4>
+				<a target="_blank" :href="workReadState.cid ? `https://archiveofourown.org/works/${workReadState.id}/chapters/${workReadState.cid}` : `https://archiveofourown.org/works/${workReadState.id}`">原 AO3 链接</a>
+				<mdui-card style="margin: 8px 0px; padding: 16px;">
 					<strong>作品信息</strong><dl>
 						<template v-if="workReadState.category"><dt>分类</dt><ul>
 							<li v-for="item in workReadState.category" :key="item">
@@ -150,16 +160,30 @@ async function switchWorkWithIndex(target) {
 							<li v-for="item in workReadState.fandom" :key="item">
 							{{ item }}</li>
 						</ul></template>
+						<template v-if="workReadState.additionalTags"><dt>附加 Tag</dt><ul>
+							<li v-for="item in workReadState.additionalTags" :key="item">
+							{{ item }}</li>
+						</ul></template>
 						<dt>语言</dt><dd>
 							{{ workReadState.lang }}
 						</dd>
 					</dl><Hr/>
 					<strong>作品状态</strong><dl>
-						<dt>发布时间</dt><dd>
+						<dt>发布</dt><dd>
 							{{ workReadState.publishedTime.year }} -
 							{{ workReadState.publishedTime.month }} -
 							{{ workReadState.publishedTime.date }}
 						</dd>
+						<template v-if="workReadState.completedTime"><dt>完成</dt><dd>
+							{{ workReadState.completedTime.year }} -
+							{{ workReadState.completedTime.month }} -
+							{{ workReadState.completedTime.date }}
+						</dd></template>
+						<template v-if="workReadState.updatedTime"><dt>更新</dt><dd>
+							{{ workReadState.updatedTime.year }} -
+							{{ workReadState.updatedTime.month }} -
+							{{ workReadState.updatedTime.date }}
+						</dd></template>
 						<dt>字数</dt><dd>
 							{{ workReadState.wordCount }}
 						</dd>
@@ -220,7 +244,7 @@ async function switchWorkWithIndex(target) {
 	<template #ssr>
 		<template v-if="workReadState.state == 'ready'">
 			<h2>{{ workReadState.title }}</h2>
-			<h4>{{ workReadState.pesud }}</h4>
+			<h4>{{ workReadState.pseud }}</h4>
 			<dl>
 				<template v-if="workReadState.category"><dt>分类</dt><ul>
 					<li v-for="item in workReadState.category" :key="item">
@@ -233,11 +257,21 @@ async function switchWorkWithIndex(target) {
 				<dt>语言</dt><dd>
 					{{ workReadState.lang }}
 				</dd>
-				<dt>发布时间</dt><dd>
+				<dt>发布</dt><dd>
 					{{ workReadState.publishedTime.year }} -
 					{{ workReadState.publishedTime.month }} -
 					{{ workReadState.publishedTime.date }}
 				</dd>
+				<template v-if="workReadState.completedTime"><dt>完成</dt><dd>
+					{{ workReadState.completedTime.year }} -
+					{{ workReadState.completedTime.month }} -
+					{{ workReadState.completedTime.date }}
+				</dd></template>
+				<template v-if="workReadState.updatedTime"><dt>更新</dt><dd>
+					{{ workReadState.updatedTime.year }} -
+					{{ workReadState.updatedTime.month }} -
+					{{ workReadState.updatedTime.date }}
+				</dd></template>
 				<dt>字数</dt><dd>
 					{{ workReadState.wordCount }}
 				</dd>
