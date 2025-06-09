@@ -31,8 +31,8 @@ onUnmounted(() => console.log('Unmounted'))*/
 
 源代码
 ---
-- 前端 Vue3 + Vite 6 (SSR) + MDUI 2 [Gitea](https://git.unknownmp.top/default/ao3-mirror-ssr)
-- 后端 FastAPI + HttpX + LXML *(暂无仓库)*
+- 前端 Vue3 + Vite 6 (SSR) + MDUI 2 [Gitea](https://git.unknownmp.top/AO3-Mirror/ao3-mirror-ssr)
+- 后端 FastAPI + HttpX + LXML [Gitea](https://git.unknownmp.top/AO3-Mirror/ao3-mirror-api)
 
 组件库与工具链
 ---
@@ -50,7 +50,7 @@ onUnmounted(() => console.log('Unmounted'))*/
 
 ### 书签 {#deprecated-feature-bookmark}
 
-因为底层 IndexedDB 更新困难和作品段落解析困难问题, 所以在 [**v1.0.7**](https://git.unknownmp.top/default/ao3-mirror-ssr/releases/tag/v1.0.7) 以后的版本废弃了书签机制
+因为底层 IndexedDB 更新困难和作品段落解析困难问题, 所以在 [**v1.0.7**](https://git.unknownmp.top/AO3-Mirror/ao3-mirror-ssr/releases/tag/v1.0.7) 以后的版本废弃了书签机制
 
 ---
 
