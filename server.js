@@ -33,11 +33,13 @@ if (!isProduction) {
 	app.use(base, sirv('./dist/client', { extensions: [] }))
 }
 
-// Serve HTML
+app.set('trust proxy', true);
+
 app.use('*all', async (req, res) => {
 	try {
 		const url = req.originalUrl.replace(base, '')
-		console.log(`Request ${url}`)
+		const ua = req.get('User-Agent');
+		console.log(`${req.ip} /${url} "${ua}"`)
 		let template
 		let render, getRoute
 		if (!isProduction) {
